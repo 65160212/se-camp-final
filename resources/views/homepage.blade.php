@@ -26,7 +26,7 @@
                     <td>{{ $user->email }}</td>
                     <td>
                     @if ($user->avatar)
-                        <img src="{{ asset('storage/avatars/' . $user->avatar) }}"  width="80">
+                        <img src="{{asset('storage/avatars/' . $user->avatar)}}"  width="80">
                     @else
                         <span>ไม่มีรูป</span>
                     @endif

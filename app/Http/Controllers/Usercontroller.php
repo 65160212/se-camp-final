@@ -14,20 +14,16 @@ class Usercontroller extends Controller {
         return view('homepage', ['users' => $users]);
     }
 
-    public function addUser(Request $request) {
-        $validatedData = $request->validate([
+    public function addUser(Request $req) {
+        $validatedData = $req->validate([
             'name' => 'required',
             'email' => 'required',
-            'password' => 'required|min:6',
+            'password' => 'required',
             'avatar' => 'nullable',
             'title_id' => 'required',
         ]);
 
-        if ($request->hasFile('avatar')) {
-            $avatar = $request->file('avatar');
-            $avatarPath = $avatar->store('public/avatars');
-            $validatedData['avatar'] = basename($avatarPath);
-        }
+        
 
         $validatedData['password'] = bcrypt($validatedData['password']);
 
@@ -35,7 +31,7 @@ class Usercontroller extends Controller {
         $user->save();
 
 
-        return redirect()->route('home')->with('success', 'User added successfully!');
+        return redirect()->route('home');
     }
 
     public function showAddPage() {
@@ -43,46 +39,41 @@ class Usercontroller extends Controller {
         return view('addpage', compact('titles'));
     }
 
-    public function deleteUser($id) {
-        $user = User::findOrFail($id);
+    public function deleteUser($index) {
+        $user = User::findOrFail($index);
         $user->delete();
 
-        return redirect()->route('home')->with('success', 'Delete User successfully!');
+        return redirect()->route('home');
     }
 
-    public function editUser($id)   {
-        $user = User::findOrFail($id);
+    public function editUser($index)   {
+        $user = User::findOrFail($index);
         $titles = Title::all();
 
         return view('editpage', compact('user', 'titles'));
     }
 
-    public function updateUser(Request $request, $id) {
-        $validatedData = $request->validate([
+    public function updateUser(Request $req, $index) {
+        $validatedData = $req->validate([
             'name' => 'required',
-            'email' => 'required' . $id,
-            'password' => 'nullable|min:6',
+            'email' => 'required|unique:users,email,' . $index,
+            'password' => 'nullable',
             'avatar' => 'nullable',
             'title_id' => 'required',
         ]);
 
-        $user = User::findOrFail($id);
+        $user = User::findOrFail($index);
 
-        if ($request->hasFile('avatar')) {
-            $avatar = $request->file('avatar');
-            $avatarPath = $avatar->store('public/avatars');
+        if ($req->hasFile('avatar')) {
+            $Avatar = $req->file('avatar');
+            $avatarPath = $Avatar->store('public/avatars');
             $validatedData['avatar'] = basename($avatarPath);
         }
 
-        if ($request->filled('password')) {
-            $validatedData['password'] = bcrypt($validatedData['password']);
-        } else {
-            unset($validatedData['password']);
-        }
-        if ($request->isMethod('PUT')) {
-
+        if ($req->isMethod('PUT')) {
+            // Handle the PUT request
             $user->update($validatedData);
-            return redirect()->route('home')->with('success', 'User updated successfully!');
+            return redirect()->route('home');
         }
     }
 }

@@ -50,32 +50,11 @@
             </div>
             <!-- /.card-body -->
             <div class="card-footer">
-                <button type="submit" class="btn btn-info" onclick="confirmSubmit()">Submit</button>
-                <a href="{{ url('/') }}" class="btn btn-default float-right"
-                    onclick="showAlert('info', 'Canceled')">Cancel</a>
+                <button type="submit" class="btn btn-info">Submit</button>
+                <a href="{{ url('/') }}" class="btn btn-default float-right">Cancel</a>
             </div>
             <!-- /.card-footer -->
         </form>
     </div>
     <!-- /.card -->
-    <script>
-        function showAlert(icon, title) {
-            Swal.fire({
-                icon: icon,
-                title: title,
-                showConfirmButton: false,
-                timer: 5000
-            });
-        }
-
-        function confirmSubmit() {
-                Swal.fire({
-                    position:"Middle",
-                    icon: "success",
-                    title: "Your work has been saved",
-                    showConfirmButton: false,
-                    timer: 1500
-            });
-        }
-    </script>
 @endsection
